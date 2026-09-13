@@ -1,67 +1,79 @@
 # Employee Management System
 
-A secure RESTful Employee Management System built with **Spring Boot**, **Spring Security**, **JWT**, **Spring Data JPA**, and **MySQL**.
+A working Spring Boot REST API for employee management using Spring Security, JWT, Spring Data JPA and MySQL.
 
 ## Features
-
-- User authentication with JWT
-- Role-based access control
-- Employee CRUD operations
-- Secure RESTful APIs
-- MySQL persistence using Spring Data JPA
-- Layered architecture with Controller, Service, Repository and Security components
+- Employee CRUD APIs
+- MySQL persistence with JPA/Hibernate
+- JWT token authentication
+- Stateless Spring Security
+- Role-based authorization: ADMIN can delete employees
+- Validation using Jakarta Bean Validation
 
 ## Tech Stack
-
-- Java
-- Spring Boot
-- Spring Security
-- JWT
-- Spring Data JPA / Hibernate
-- MySQL
-- Maven
-
-## API Overview
-
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/auth/login` | Authenticate user and generate JWT |
-| POST | `/api/employees` | Create employee |
-| GET | `/api/employees` | Get all employees |
-| GET | `/api/employees/{id}` | Get employee by ID |
-| PUT | `/api/employees/{id}` | Update employee |
-| DELETE | `/api/employees/{id}` | Delete employee |
-
-> Exact endpoint paths may vary depending on the final controller mappings.
+Java 17, Spring Boot 3, Spring Security, JWT, Spring Data JPA, Hibernate, MySQL, Maven
 
 ## Project Structure
-
 ```text
-src/main/java/
-└── ...
-    ├── controller/
-    ├── service/
-    ├── repository/
-    ├── entity/
-    ├── security/
-    └── config/
+src/main/java/com/employee/management/
+├── EmployeeManagementApplication.java
+├── controller/
+│   ├── AuthController.java
+│   └── EmployeeController.java
+├── model/
+│   ├── Employee.java
+│   └── Role.java
+├── repository/
+│   └── EmployeeRepository.java
+├── service/
+│   └── EmployeeService.java
+└── security/
+    ├── JwtAuthenticationFilter.java
+    ├── JwtService.java
+    └── SecurityConfig.java
 ```
 
-## Configuration
+## Database setup
+Create a MySQL database named `employee_db`, then set your local MySQL password in `src/main/resources/application.properties`. Do not commit real credentials.
 
-Create a local MySQL database and configure the connection in `application.properties` or environment variables.
-
-Never commit real database passwords, JWT secrets, API keys, or other credentials. Use environment variables or a local untracked configuration file instead.
-
-## Run Locally
-
+## Run
 ```bash
 mvn clean install
 mvn spring-boot:run
 ```
 
-The application can then be tested with Postman or any REST client.
+Server: `http://localhost:8080`
+
+## Authentication
+Request a token:
+```text
+POST /api/auth/login?username=admin
+```
+
+Use the returned token on protected requests:
+```text
+Authorization: Bearer <token>
+```
+
+## Employee APIs
+| Method | Endpoint | Access |
+|---|---|---|
+| POST | `/api/employees` | Authenticated |
+| GET | `/api/employees` | Authenticated |
+| GET | `/api/employees/{id}` | Authenticated |
+| PUT | `/api/employees/{id}` | Authenticated |
+| DELETE | `/api/employees/{id}` | ADMIN |
+
+Example request body:
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "department": "Engineering",
+  "designation": "Software Developer",
+  "role": "USER"
+}
+```
 
 ## Resume Description
-
 Built an Employee Management System using Spring Boot, Spring Security, and JWT, implementing role-based access control and RESTful CRUD APIs with MySQL persistence via Spring Data JPA.
